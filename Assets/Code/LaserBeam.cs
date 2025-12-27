@@ -11,6 +11,8 @@ public class LaserBeam
     const float AIR_IOR = 1.0f;
     const float GLASS_IOR = 1.5f;
 
+    const float MIRROR_IOR = 2.5f;
+
     float currentIOR = AIR_IOR;
     int maxBounces = 10;
 
@@ -56,8 +58,18 @@ public class LaserBeam
 
         if (hit.collider.CompareTag("Mirror"))
         {
+
+            float nextIOR = (currentIOR == AIR_IOR) ? MIRROR_IOR : AIR_IOR;
+            float eta = currentIOR / nextIOR;
             Vector3 reflectDir = Vector3.Reflect(direction, normal).normalized;
+            Vector3 refractDir = Refract(direction, normal, eta);
+
             CastRay(hitPoint, reflectDir, depth + 1);
+            currentIOR = nextIOR;
+            CastRay(hitPoint, refractDir.normalized, depth + 1);
+
+            
+
         }
         else if (hit.collider.CompareTag("Glass"))
         {
@@ -66,17 +78,12 @@ public class LaserBeam
 
             Vector3 refractDir = Refract(direction, normal, eta);
 
-            // Total internal reflection
-            if (refractDir == Vector3.zero)
-            {
-                Vector3 reflectDir = Vector3.Reflect(direction, normal).normalized;
-                CastRay(hitPoint, reflectDir, depth + 1);
-            }
-            else
-            {
-                currentIOR = nextIOR;
-                CastRay(hitPoint, refractDir.normalized, depth + 1);
-            }
+
+            Vector3 reflectDir = Vector3.Reflect(direction, normal).normalized;
+            CastRay(hitPoint, reflectDir, depth + 1);
+            currentIOR = nextIOR;
+            CastRay(hitPoint, refractDir.normalized, depth + 1);
+
         }
         else
         {
