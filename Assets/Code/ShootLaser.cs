@@ -53,7 +53,6 @@ public class ShootLaser : MonoBehaviour
     {
         if (!laserOn || beam == null) return;
 
-        // 🔥 real-time optics update
         beam.Rebuild(
             firePoint.position,
             firePoint.right

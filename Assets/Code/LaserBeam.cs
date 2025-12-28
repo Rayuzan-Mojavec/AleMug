@@ -9,7 +9,6 @@ public class LaserBeam
 
 
     const float AIR_IOR = 1.0f; // ε0​μ0​
-
     const float MIRROR_IOR = 2.0f; // 4ε0​μ0​
     const float GLASS_IOR = 9.0f; // 81ε0​μ0​
 
