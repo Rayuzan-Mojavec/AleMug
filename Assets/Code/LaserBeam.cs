@@ -120,13 +120,14 @@ public class LaserBeam
         }
     }
 
-    public void Rebuild(Vector3 pos, Vector3 dir)
-{
-    laserIndices.Clear();
-    currentIOR = AIR_IOR;
+    public void Rebuild(Vector3 origin, Vector3 direction)
+    {
+        laserIndices.Clear();
+        laser.positionCount = 0;
+        currentIOR = AIR_IOR;
 
-    CastRay(pos, dir.normalized, 0);
-}
+        CastRay(origin, direction.normalized, 0);
+    }
 
     public void Destroy()
     {
