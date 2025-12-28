@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ScrollVertical : MonoBehaviour
 {
-    public float speed = 2f;
+    public float speed = 0.2f;
 
     private float tileHeight;
     private Camera cam;

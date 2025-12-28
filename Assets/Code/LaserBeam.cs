@@ -12,20 +12,16 @@ public class LaserBeam
     const float MIRROR_IOR = 2.0f; // 4ε0​μ0​
     const float GLASS_IOR = 9.0f; // 81ε0​μ0​
 
-
-    float currentIOR = AIR_IOR;
-    int maxBounces = 10;
+    int maxBounces = 100;
 
     public LaserBeam(Vector3 pos, Vector3 dir, Material material)
     {
         laserObj = new GameObject("Plane Wave");
         laser = laserObj.AddComponent<LineRenderer>();
 
-        laser.startWidth = 0.1f;
-        laser.endWidth = 0.1f;
+        laser.startWidth = 0.05f;
+        laser.endWidth = 0.05f;
         laser.material = material;
-        laser.startColor = Color.red;
-        laser.endColor = Color.red;
         laser.positionCount = 0;
 
         CastRay(pos, dir.normalized, 0);
@@ -58,32 +54,23 @@ public class LaserBeam
 
         if (hit.collider.CompareTag("Mirror"))
         {
-
-            float nextIOR = (currentIOR == AIR_IOR) ? MIRROR_IOR : AIR_IOR;
-            float eta = currentIOR / nextIOR;
             Vector3 reflectDir = Vector3.Reflect(direction, normal).normalized;
-            Vector3 refractDir = Refract(direction, normal, eta);
+            Vector3 refractDir = Refract(direction, normal, AIR_IOR / MIRROR_IOR);
 
             CastRay(hitPoint, reflectDir, depth + 1);
-            currentIOR = nextIOR;
             CastRay(hitPoint, refractDir.normalized, depth + 1);
 
-            
-
+            return; // do NOT change currentIOR
         }
         else if (hit.collider.CompareTag("Glass"))
         {
-            float nextIOR = (currentIOR == AIR_IOR) ? GLASS_IOR : AIR_IOR;
-            float eta = currentIOR / nextIOR;
-
-            Vector3 refractDir = Refract(direction, normal, eta);
-
-
             Vector3 reflectDir = Vector3.Reflect(direction, normal).normalized;
+            Vector3 refractDir = Refract(direction, normal, AIR_IOR / GLASS_IOR);
+
             CastRay(hitPoint, reflectDir, depth + 1);
-            currentIOR = nextIOR;
             CastRay(hitPoint, refractDir.normalized, depth + 1);
 
+            return; // do NOT change currentIOR
         }
         else
         {
@@ -104,8 +91,8 @@ public class LaserBeam
 
         float k = 1f - eta * eta * (1f - cosi * cosi);
 
-        if (k < 0f)
-            return Vector3.zero; // Total Internal Reflection
+        if (k <= 0f)
+            return Vector3.zero;
 
         return eta * I + (eta * cosi - Mathf.Sqrt(k)) * n;
     }
@@ -123,7 +110,6 @@ public class LaserBeam
     {
         laserIndices.Clear();
         laser.positionCount = 0;
-        currentIOR = AIR_IOR;
 
         CastRay(origin, direction.normalized, 0);
     }
