@@ -119,4 +119,19 @@ public class LaserBeam
             laser.SetPosition(i, laserIndices[i]);
         }
     }
+
+    public void Rebuild(Vector3 pos, Vector3 dir)
+{
+    laserIndices.Clear();
+    currentIOR = AIR_IOR;
+
+    CastRay(pos, dir.normalized, 0);
+}
+
+    public void Destroy()
+    {
+        if (laserObj != null)
+            GameObject.Destroy(laserObj);
+    }
+
 }
