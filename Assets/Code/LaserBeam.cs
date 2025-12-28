@@ -7,11 +7,12 @@ public class LaserBeam
     LineRenderer laser;
     List<Vector3> laserIndices = new List<Vector3>();
 
-    // Refractive indices
-    const float AIR_IOR = 1.0f;
-    const float GLASS_IOR = 1.5f;
 
-    const float MIRROR_IOR = 2.5f;
+    const float AIR_IOR = 1.0f; // ε0​μ0​
+
+    const float MIRROR_IOR = 2.0f; // 4ε0​μ0​
+    const float GLASS_IOR = 9.0f; // 81ε0​μ0​
+
 
     float currentIOR = AIR_IOR;
     int maxBounces = 10;
@@ -95,29 +96,19 @@ public class LaserBeam
     Vector3 Refract(Vector3 I, Vector3 N, float eta)
     {
         float cosi = Mathf.Clamp(Vector3.Dot(I, N), -1f, 1f);
-        float etai = 1f;
-        float etat = eta;
         Vector3 n = N;
 
-        if (cosi < 0)
-        {
+        if (cosi < 0f)
             cosi = -cosi;
-        }
         else
-        {
-            float temp = etai;
-            etai = etat;
-            etat = temp;
             n = -N;
-        }
 
-        float etaRatio = etai / etat;
-        float k = 1f - etaRatio * etaRatio * (1f - cosi * cosi);
+        float k = 1f - eta * eta * (1f - cosi * cosi);
 
         if (k < 0f)
-            return Vector3.zero; // Total internal reflection
+            return Vector3.zero; // Total Internal Reflection
 
-        return etaRatio * I + (etaRatio * cosi - Mathf.Sqrt(k)) * n;
+        return eta * I + (eta * cosi - Mathf.Sqrt(k)) * n;
     }
 
     void UpdateLaser()
