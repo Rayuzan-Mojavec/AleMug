@@ -8,6 +8,7 @@ TagManager:
   - Glass
   - 4e0m0
   - 9e0m0
+  - Target
   layers:
   - Default
   - TransparentFX

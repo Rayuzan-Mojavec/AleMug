@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class LaserBeam
 {
     GameObject laserObj;
     LineRenderer laser;
     List<Vector3> laserIndices = new List<Vector3>();
+
+    public Collider CurrentHit { get; private set; }
 
 
     const float AIR_IOR = 1.0f; // ε0​μ0​
@@ -42,6 +45,7 @@ public class LaserBeam
         }
         else
         {
+            CurrentHit = null;
             laserIndices.Add(ray.GetPoint(30f));
             UpdateLaser();
         }
@@ -49,6 +53,7 @@ public class LaserBeam
 
     void HandleHit(RaycastHit hit, Vector3 direction, int depth)
     {
+        CurrentHit = hit.collider;
         Vector3 hitPoint = hit.point + direction * 0.001f;
         Vector3 normal = hit.normal;
 
