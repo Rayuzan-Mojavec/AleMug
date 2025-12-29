@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 
 public class ShootLaser : MonoBehaviour
 {
@@ -7,15 +10,20 @@ public class ShootLaser : MonoBehaviour
     public Material material;
     public float duration = 3f;
 
-    Collider trackedCollider;
-    float hitTimer = 0f;
-    public float holdTime = 0.5f;
-    bool triggered = false;
+    public float target_holdTime = 2f;
+    public float enemy_holdTime = 0.5f;
 
     LaserBeam beam;
     bool laserOn;
     Coroutine timer;
 
+    // ✅ Per-collider timers
+    Dictionary<Collider, float> hitTimers = new Dictionary<Collider, float>();
+    HashSet<Collider> triggered = new HashSet<Collider>();
+
+    // =============================
+    // BUTTON
+    // =============================
     public void FireLaser()
     {
         StopLaser();
@@ -39,10 +47,10 @@ public class ShootLaser : MonoBehaviour
 
     void StopLaser()
     {
-        trackedCollider = null;
-        hitTimer = 0f;
-        triggered = false;
         laserOn = false;
+
+        hitTimers.Clear();
+        triggered.Clear();
 
         if (timer != null)
         {
@@ -54,44 +62,58 @@ public class ShootLaser : MonoBehaviour
         beam = null;
     }
 
+    // =============================
+    // UPDATE
+    // =============================
     void Update()
-{
+    {
         if (!laserOn || beam == null) return;
 
-        beam.Rebuild(
-            firePoint.position,
-            firePoint.right
-        );
+        beam.Rebuild(firePoint.position, firePoint.right);
 
-        Collider hit = beam.CurrentHit;
+        HashSet<Collider> currentHits = new HashSet<Collider>();
 
-        if (hit != null && hit.CompareTag("Target"))
+        foreach (var c in beam.HitColliders)
         {
-            if (hit == trackedCollider)
-            {
-                hitTimer += Time.deltaTime;
+            if (!c.CompareTag("Target") && !c.CompareTag("Enemy"))
+                continue;
 
-                if (!triggered && hitTimer >= holdTime)
-                {
-                    triggered = true;
-                    Debug.Log("Target held for 2 seconds!");
-                    // 👉 DO SOMETHING HERE
-                }
-            }
-            else
-            {   
-            // New collider hit
-                trackedCollider = hit;
-                hitTimer = 0f;
-                triggered = false;
+            currentHits.Add(c);
+
+            if (!hitTimers.ContainsKey(c))
+                hitTimers[c] = 0f;
+
+            hitTimers[c] += Time.deltaTime;
+
+            float requiredTime =
+                c.CompareTag("Target") ? target_holdTime : enemy_holdTime;
+
+            if (!triggered.Contains(c) && hitTimers[c] >= requiredTime)
+            {
+                triggered.Add(c);
+
+                if (c.CompareTag("Target"))
+                    SceneManager.LoadScene(2);
+                else
+                    SceneManager.LoadScene(3);
+
+                // 👉 DO SOMETHING HERE
             }
         }
-        else
+
+        // Remove interrupted hits
+        List<Collider> toRemove = new List<Collider>();
+
+        foreach (var kv in hitTimers)
         {
-        // Interrupted
-            trackedCollider = null;
-            hitTimer = 0f;
-            triggered = false;
+            if (!currentHits.Contains(kv.Key))
+                toRemove.Add(kv.Key);
+        }
+
+        foreach (var c in toRemove)
+        {
+            hitTimers.Remove(c);
+            triggered.Remove(c);
         }
     }
 }

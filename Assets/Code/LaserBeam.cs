@@ -9,13 +9,14 @@ public class LaserBeam
     List<Vector3> laserIndices = new List<Vector3>();
 
     public Collider CurrentHit { get; private set; }
+    public HashSet<Collider> HitColliders { get; private set; } = new HashSet<Collider>();
 
 
     const float AIR_IOR = 1.0f; // ε0​μ0​
     const float MIRROR_IOR = 2.0f; // 4ε0​μ0​
     const float GLASS_IOR = 9.0f; // 81ε0​μ0​
 
-    int maxBounces = 100;
+    readonly int maxBounces = 100;
 
     public LaserBeam(Vector3 pos, Vector3 dir, Material material)
     {
@@ -54,6 +55,7 @@ public class LaserBeam
     void HandleHit(RaycastHit hit, Vector3 direction, int depth)
     {
         CurrentHit = hit.collider;
+        HitColliders.Add(hit.collider);
         Vector3 hitPoint = hit.point + direction * 0.001f;
         Vector3 normal = hit.normal;
 
@@ -115,6 +117,8 @@ public class LaserBeam
     {
         laserIndices.Clear();
         laser.positionCount = 0;
+
+        HitColliders.Clear();
 
         CastRay(origin, direction.normalized, 0);
     }

@@ -9,6 +9,7 @@ TagManager:
   - 4e0m0
   - 9e0m0
   - Target
+  - Enemy
   layers:
   - Default
   - TransparentFX

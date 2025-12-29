@@ -1683,7 +1683,8 @@ MonoBehaviour:
   firePoint: {fileID: 1160449682}
   material: {fileID: -876546973899608171, guid: ca2ed216f98028c4dae6c5224a952b3c, type: 3}
   duration: 3
-  holdTime: 0.5
+  target_holdTime: 2
+  enemy_holdTime: 0.5
 --- !u!1 &1160449680
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,7 +1793,8 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   material: {fileID: 0}
   duration: 3
-  holdTime: 2
+  target_holdTime: 2
+  enemy_holdTime: 0.5
 --- !u!135 &1160449684
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1964,7 +1966,7 @@ GameObject:
   - component: {fileID: 1681731709}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Target
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
