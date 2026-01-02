@@ -62,10 +62,8 @@ public class LaserBeam
         if (hit.collider.CompareTag("Mirror"))
         {
             Vector3 reflectDir = Vector3.Reflect(direction, normal).normalized;
-            Vector3 refractDir = Refract(direction, normal, AIR_IOR / MIRROR_IOR);
 
             CastRay(hitPoint, reflectDir, depth + 1);
-            CastRay(hitPoint, refractDir.normalized, depth + 1);
 
             return; // do NOT change currentIOR
         }
