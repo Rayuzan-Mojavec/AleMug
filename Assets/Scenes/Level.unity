@@ -793,7 +793,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "4\u03B5<sub>0</sub>\u03BC<sub>0</sub>"
+  m_text: "9\u03B5<sub>0</sub>\u03BC<sub>0</sub>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -1475,7 +1475,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: -3
   m_MaskInteraction: 2
   m_Sprite: {fileID: 21300000, guid: d16d1c26112386542a28cbfb3ae009c9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2228,7 +2228,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: -2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8596640243658272642, guid: a72183b4df5373e448c57e9fd0653ad8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
